@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="Reply">
+	
+	<!-- 댓글 조회 (공지사항) -->
+	<select id="noticeReplyRead" parameterType="Long" resultType="reply">
+		<![CDATA[
+		select commentNId, noticeId, commentNWriter, commentNContents from notice_comment where noticeId=#{noticeId}
+		]]>
+	</select>
+	
+	<!-- 댓글등록(공지사항) -->
+	<insert id="noticeReply" parameterType="reply">
+		insert into notice_comment(commentNId, noticeId, commentNWriter, commentNContents)
+		values(notice_comment_seq.NEXTVAL, #{noticeId}, #{commentNWriter}, #{commentNContents})
+	</insert>
+	
+	<!-- 댓글 조회(이벤트) -->
+	<select id="eventReplyRead" parameterType="Long" resultType="reply">
+		select * from event_comment where eventId=#{eventId}
+	</select>
+	
+	<!-- 댓글등록(이벤트) -->
+	<insert id="eventReply" parameterType="reply">
+		insert into event_comment(commentEId, eventId, commentEWriter, commentEContents)
+		values(event_comment_seq.NEXTVAL, #{eventId}, #{commentEWriter}, #{commentEContents})
+	</insert> 
+</mapper>
