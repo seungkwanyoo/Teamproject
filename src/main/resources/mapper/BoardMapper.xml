@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        
+<mapper namespace="Board">
+	
+	<!-- ★★공지사항,이벤트 게시판 XML 시작★★ (김재동) -->
+	
+	<!-- ★★게시판에서 공지사항 시작★★ -->
+	<!-- 글작성(공지사항) xml -->
+	<insert id="noticesave" parameterType="board">
+		insert into notice_board (noticeId, noticeBoardWriter, noticeBoardTitle, noticeBoardContents)
+		values(notice_seq.NEXTVAL, #{noticeBoardWriter}, #{noticeBoardTitle}, #{noticeBoardContents})
+	</insert>
+	
+	<!-- 글목록(공지사항) xml -->
+	<select id="findAllNotice" resultType="board">
+		select * from notice_board order by noticeId desc
+	</select>
+	
+	<!-- 글 클릭시 이동(title누르면 id 찾음)->상세보기 (공지사항) xml -->
+	<select id="findByIdNotice" resultType="board" parameterType="Long">
+		select * from notice_board where noticeId=#{noticeId}
+	</select>
+	
+	<!-- 글 클릭시 조회수 올라가는 xml -->
+	<update id="updateHitsN" parameterType="Long">
+		update notice_board set noticeBoardHits = noticeBoardHits+1 where noticeId=#{noticeId}
+	</update>
+	
+	<!-- 글삭제(공지사항 xml) -->
+	<delete id="deleteNotice" parameterType="Long">
+		delete from notice_board where noticeId=#{noticeId}
+	</delete>
+	
+	<!-- 글업뎃(공지사항 xml) -->
+	<update id="updateNotice" parameterType="board">
+		update notice_board set noticeBoardTitle = #{noticeBoardTitle} , noticeBoardContents = #{noticeBoardContents} where noticeId=#{noticeId}
+	</update>
+	
+	<!-- 페이징처리 (공지사항) -->
+	<select id="pagingNList" parameterType="java.util.HashMap" resultType="board">
+		SELECT * from (
+    select ROWNUM NUMN , N.* from (
+        select * from notice_board order by  noticeBoardCreatedTime desc
+        ) N
+    )
+	WHERE NUMN BETWEEN #{startN} AND #{limitN} 
+	</select>
+	
+	<!-- 전체글 갯수 조회 (공지사항)  -->
+	<select id="boardNCount"  resultType="Integer">
+		select count(noticeId) from notice_board
+	</select>
+	
+	<!-- 게시판에서 공지사항  끝  -->
+	
+	<!--  =============================================================================== -->
+	
+	<!-- ★★게시판에서 이벤트 시작★★ -->
+	<!-- 글작성(이벤트) xml -->
+	<insert id="eventsave" parameterType="board">
+		insert into event_board (eventId, eventBoardWriter, eventBoardTitle, eventBoardContents)
+		values(event_seq.NEXTVAL, #{eventBoardWriter}, #{eventBoardTitle}, #{eventBoardContents})
+	</insert>
+	
+	<!-- 글목록(이벤트) xml -->
+	<select id="findAllEvent" resultType="board">
+		select * from event_board order by eventId desc
+	</select>
+	
+	<!-- 글 클릭시 이동(title누르면 id 찾음)->상세보기 (이벤트) xml -->
+	<select id="findByIdEvent" resultType="board" parameterType="Long">
+		select * from event_board where eventId=#{eventId}
+	</select>
+	
+	<!-- 글 클릭시 조회수 올라가는 xml -->
+	<update id="updateHitsE" parameterType="Long">
+		update event_board set eventBoardHits = eventBoardHits+1 where eventId=#{eventId}
+	</update>
+	
+	<!-- 글삭제(이벤트 xml) -->
+	<delete id="deleteEvent" parameterType="Long">
+		delete from event_board where eventId=#{eventId}
+	</delete>
+	
+	<!-- 글업뎃(이벤트 xml) -->
+	<update id="updateEvent" parameterType="board">
+		update event_board set eventBoardTitle = #{eventBoardTitle}, eventBoardContents = #{eventBoardContents} where eventId=#{eventId}
+	</update>
+	
+	<!-- 페이징처리 (이벤트) -->
+	<select id="pagingEList" parameterType="java.util.HashMap" resultType="board">
+		SELECT * from (
+ 		select ROWNUM NUMN , E.* from (
+	        select * from event_board order by  eventBoardCreatedTime desc
+	        ) E
+	    )
+	WHERE NUMN BETWEEN #{startE} AND #{limitE} 
+	</select>
+	
+	<!-- 전체글 갯수 조회 (이벤트)  -->
+	<select id="boardECount"  resultType="Integer">
+		select count(eventId) from event_board
+	</select>
+	
+
+	
+	<!-- 게시판에서 이벤트 끝 -->
+	<!-- ★★공지사항,이벤트 게시판 XML 끝★★ (김재동) -->
+	
+	
+</mapper>
